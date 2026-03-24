@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Магічне Число ✨</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+            width: 350px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        h1 { margin-bottom: 1rem; font-size: 24px; }
+        input {
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            width: 80%;
+            margin-bottom: 1rem;
+            font-size: 18px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            background: #ff7e5f;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+        button:hover { background: #feb47b; transform: scale(1.05); }
+        #message { margin-top: 1.5rem; font-weight: bold; min-height: 3em; }
+        .stats { font-size: 0.9rem; color: #ddd; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Магічне Число ✨</h1>
+    <p>Вгадай число від 1 до 100</p>
+    
+    <input type="number" id="guessInput" placeholder="Твоє число..." min="1" max="100">
+    <br>
+    <button onclick="checkGuess()">Вгадати!</button>
+
+    <div id="message">Введи число та натисни кнопку</div>
+    <div class="stats">Спроб: <span id="attempts">0</span> | Залишилось: <span id="remaining">10</span></div>
+    
+    <button onclick="resetGame()" style="margin-top: 20px; background: #444; display: none;" id="resetBtn">Грати знову</button>
+</div>
+
+<script>
+    let targetNumber = Math.floor(Math.random() * 100) + 1;
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    function checkGuess() {
+        const input = document.getElementById('guessInput');
+        const message = document.getElementById('message');
+        const attemptsDisplay = document.getElementById('attempts');
+        const remainingDisplay = document.getElementById('remaining');
+        const guess = parseInt(input.value);
+
+        if (isNaN(guess) || guess < 1 || guess > 100) {
+            message.innerHTML = "❌ Введи коректне число (1-100)!";
+            return;
+        }
+
+        attempts++;
+        let remaining = maxAttempts - attempts;
+
+        if (guess === targetNumber) {
+            message.innerHTML = "🎉 ПЕРЕМОГА! <br> Число " + targetNumber + " вгадано!";
+            message.style.color = "#4ef037";
+            endGame();
+        } else if (attempts >= maxAttempts) {
+            message.innerHTML = "💀 ГРУ ЗАКІНЧЕНО! <br> Число було: " + targetNumber;
+            message.style.color = "#ff4d4d";
+            endGame();
+        } else {
+            message.innerHTML = guess < targetNumber ? "Замало! ⬆️" : "Забагато! ⬇️";
+            message.style.color = "white";
+        }
+
+        attemptsDisplay.innerText = attempts;
+        remainingDisplay.innerText = remaining;
+        input.value = "";
+        input.focus();
+    }
+
+    function endGame() {
+        document.getElementById('guessInput').disabled = true;
+        document.querySelector('button[onclick="checkGuess()"]').style.display = 'none';
+        document.getElementById('resetBtn').style.display = 'inline-block';
+    }
+
+    function resetGame() {
+        targetNumber = Math.floor(Math.random() * 100) + 1;
+        attempts = 0;
+        document.getElementById('guessInput').disabled = false;
+        document.getElementById('guessInput').value = "";
+        document.querySelector('button[onclick="checkGuess()"]').style.display = 'inline-block';
+        document.getElementById('resetBtn').style.display = 'none';
+        document.getElementById('message').innerHTML = "Введи число та натисни кнопку";
+        document.getElementById('message').style.color = "white";
+        document.getElementById('attempts').innerText = "0";
+        document.getElementById('remaining').innerText = "10";
+    }
+</script>
+
+</body>
+</html>
